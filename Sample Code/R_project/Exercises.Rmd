@@ -1,0 +1,330 @@
+# R Exercises
+
+**Sequences of Numbers, Vectors**
+
+- Generate x=3 6 8
+- Calculate $x/2$, $x^2$, $\sqrt{x}$.
+- Display the second element of $x$ 
+- Create a vector with the first and the third element of $x$.
+- Remove the third elmement from $x$.
+- Generate y= 2 5 1
+- Calculate $x-y$, $x*y$ and x'%*%y and x%*%y'.
+- Display elements of x, for which y is larger than 1.5.
+- Element(s) of y for which the element in x is equal to 6.
+- Generate a vector of integers from 4-10.
+- Using seq and rep, (a) generate a vector ranging from 2-3 in 0.1 steps, (b) generate a vector that repeats the elements of $x$ 4 times, i.e. the first four elements of the new vector are four times the first element of $x$, etc.
+
+```{r, error=TRUE,eval=F}
+
+x <- c(3,6,8)
+x
+x/2
+x^2
+sqrt(x)
+x[2]
+x[c(1,3)]
+x[-3]
+y <- c(2,5,1)
+y
+x-y
+x*y
+t(x)%*%y
+(x)%*%t(y)
+x[1]*y[1]+x[2]*y[2]+x[3]*y[3]
+x[y>1.5]###Elements of x, for which y is larger than 1.5
+y[x==6]##Element of y for which the element in x is equal to 6.
+4:10 ##
+seq(2,3,by=0.1)
+rep(x,each=4)
+
+```
+
+
+## Matrices
+
+
+
+- Generate a matrix 
+
+$$A=\left(\begin{matrix}
+    1&    2 &   5\\
+    4   & 7 &   3
+\end{matrix}\right)$$
+- Check the dimensions of A.
+- Generate a matrix 
+$$B=\left(\begin{matrix}
+    1&    4 &   2\\
+    7   & 5 &   3
+\end{matrix}\right)$$
+
+- Check the dimensions of B.
+- Generate a square matrix C:
+$$A=\left(\begin{matrix}
+    1&    -1 \\
+    -1   & 3 
+\end{matrix}\right)$$
+
+- Extract the diagonal elements of C.
+- Calculate $(C'C)^{-1}$
+
+
+```{r, error=TRUE,eval=F}
+
+A <- matrix(c(1,4,2,7,5,3), nrow=2, ncol=3)
+A
+dim(A)
+B <- matrix(c(1,4,2,7,5,3), nrow=2, ncol=3, byrow=T)
+B
+dim(B)
+C<-matrix(c(1,-1,-1,3),nrow=2,ncol=2)
+D<-matrix(c(6,3,4,2),nrow=2,ncol=2)
+diag(C)
+solve(t(C)%*%C)
+```
+
+## Sums and frequencies
+
+$$d=(77 \, 93 \, 92\, 68\, 88\, 75\, 100)$$
+
+- Calculate the mean of $d$, i.e $\bar{d}$. 
+- Sort all elements of $d$ in ascending/descending order.
+- What is the smallest and biggest element of $d$?
+
+```{r, include=F,error=TRUE,eval=F}
+d <- c(77, 93, 92, 68, 88, 75, 100)
+d
+sum(d)
+length(d)
+mean(d)
+sum(d)/length(d)
+sort(d)
+min(d)
+max(d)
+```
+
+
+## Logical Operators
+
+Generate a vector x=c(1:20). Create a vector (each) containing logical operators indicating
+
+
+- Which elements of x are smaller than 15.
+- Which elements of x are smaller than 10 and larger than 5.
+- Store the number for which the two statements are true in a vector k. 
+
+
+```{r, include=F,error=TRUE,eval=F}
+x=1:20
+z<-x<15
+p<-x<10&x>5
+k<-c(sum(z),sum(p))
+```
+
+## Statistical Distributions
+
+### Exercise 1
+
+
+Consider this multiple choice test:
+
+
+- 12 Questions
+- 5 possible answers, 1 is correct.
+
+
+
+If the answers are chosen randomly
+
+
+- What is the probability of exactly four correct answers? 
+- What is the probability of four or fewer correct answers?
+
+```{r, include=F, error=TRUE,eval=F}
+
+dbinom(4, size=12, prob=0.2) #density function
+pbinom(4, size=12, prob=0.2) #cumulative distribution function
+
+
+
+```
+
+### Exercise 2
+
+Assume that the results of an exam ($x$ ) are normally distributed with $\mu=72$ and $\sigma=15.2$
+
+- What is the proportion of students that have 84 or more points (on avg.)
+- 1000 Students take the exam. Simulate the results, calculate $\bar{x}$ and $\hat{\sigma}$ (with sd()).
+
+
+```{r, include=T, error=TRUE,eval=T}
+pnorm(84, mean=72, sd=15.2, lower.tail=FALSE)
+##Oder 
+1-pnorm(84, mean=72, sd=15.2, lower.tail=T)
+S<-rnorm(1000,72,15.2)
+mean(S)
+sd(S)
+
+
+```
+
+### Exercise 3
+
+
+
+Generate 1000 random numbers on the interval between a=0 und b=1 with 
+
+$$f(x) =\begin{cases}\frac{1}{b-a} \quad \mbox{if} \quad a\leq x \leq b\\
+0 \quad \mbox{if} \quad x<a \quad \mbox{or} \quad x>b \end{cases}$$ 
+
+
+
+```{r, include=T, error=TRUE,eval=T}
+
+####Uniform###
+set.seed(830)
+runif(100, min=0, max=1)
+mean(runif(100, min=0, max=1))
+```
+
+## Loops and functions
+
+
+### Exercise 1 
+
+Using the following variables:
+
+- x=1
+- y=40
+- i=c(1:10)
+
+For this exercise, write a for() loop that increments x by three and decreases y by two, for each i.
+
+
+```{r, include=F, error=TRUE,eval=F}
+
+##Loops##
+
+x=1
+y=40
+#i=c(1:10)
+
+
+for(i in 1:10)
+{
+  print(x)
+  x<-x+3
+  y<-y-2
+  #print(y)
+}
+```
+
+### Exercise 2
+
+Using the following variables:
+
+- a=15:10
+- b=20:15
+
+For this exercise, type a while () loop that computes a vector x=225 224 221 216 209 200, such that
+
+
+```{r, include=F, error=TRUE,eval=F}
+
+x[1]=a[1]*b[6]
+x[2]=a[2]*b[5]
+x[3]=a[3]*b[4]
+.
+.
+x[6]=a[6]*b[1]
+
+```
+
+```{r, include=F, error=TRUE,eval=F}
+
+#########Loops, exercise 2##############
+a=15:10
+b=20:15
+x<-vector(mode = "numeric", length = length(a))
+i=0
+while(i<length(a))
+{
+ i=i+1; x[i]<-a[i]*b[length(a)-i+1]
+}
+
+```
+
+### Exercise 3 
+
+
+- Draw a vector $u$ with length 30 from $\mathcal{N}=(0,1)$. 
+- Calculate $u^2$ for the first k=10 values in u.
+- Calculate $u^2$ for the first k=10 values in u only when $|u|>l=0.8$, otherwise it remains the original value.
+- Write a function that takes three arguments ($u,k,l$) and returns two results: A vector of length($k$) with the result of the calculation $u^2$, $u$ respectively) and a scalar indicating the number of elements of $u$ for which the condition is fulfilled. 
+
+
+```{r, include=T, error=TRUE,eval=T}
+# Create a vector filled with random normal values
+u1 <- rnorm(30)
+print("This loop calculates the square of the first 10 elements of vector u1")
+# Initialize `usq`
+usq <- 0
+for(i in 1:10) {
+  # i-th element of `u1` squared into `i`-th position of `usq`
+  usq[i] <- u1[i]*u1[i]
+  print(usq[i])
+}
+
+#u1 <- rnorm(30)
+print("This loop calculates the square of the first 10 elements of vector u1 if condition is met")
+# Initialize `usq`
+usq <- 0
+for(i in 1:10) {
+  if(abs(u1[i])>0.8){
+  # i-th element of `u1` squared into `i`-th position of `usq`
+  usq[i] <- u1[i]*u1[i]
+  }
+  else{
+    usq[i]<-u1[i]
+  }
+  #print(usq[i])
+}
+print(i)
+
+
+
+#u1 <- rnorm(30)
+###demonstrating the two different ways to utilize logical operators
+u<-u1[1:10]
+#z=u[abs(u)>0.8]
+z=sum(abs(u)>0.8)
+usquared<-function(u,k,l)
+{
+  print("This loop calculates the square of the first k elements of vector u1, for which u>0.8 ")
+  # Initialize `usq`
+  usq <- 0
+  for(i in 1:k) {
+    if(abs(u[i])>l){
+      # i-th element of `u1` squared into `i`-th position of `usq`
+      usq[i] <- u[i]*u[i]
+    }
+    else{
+      usq[i]<-u[i]
+    }
+  }
+  z=sum(abs(u[1:k])>l)
+  return(list(usq=usq,z=z))
+}
+
+ergebnis=usquared(u1, 20,0.5)
+ergebnis$z
+ergebnis$usq
+ergebnis
+
+
+###With the default values###
+ergebnis=usquared(u1)
+ergebnis
+
+```
+
+
