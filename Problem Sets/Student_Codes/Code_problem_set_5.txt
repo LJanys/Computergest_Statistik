@@ -1,0 +1,324 @@
+#####Problemset 5####
+rm(list = ls())
+####Exercise 1####
+####DGP####
+
+beta=1.5
+
+#Assuming a=1 for simplicity's sake
+
+a=1
+
+n=200
+
+#Generating x[i] and epsilon[i]
+data=c(rnorm(n,0,1))
+
+eps=c(rnorm(n,0,1))
+
+#Regression equation:
+
+y=a+beta*data+eps
+
+#Plotting the data we're working with so we get an idea of how it looks like:
+plot(data, y,
+     main="The DGP plottet",
+     xlab="x",
+     ylab="y",
+     #type="s",
+     col="red") 
+
+
+
+#Defining different bandwidths to work with later:
+
+h1=0.01
+h2=0.1
+h3=0.5
+
+#Combining the bandwidths into a vector:
+
+hv<-cbind(h1,h2,h3)
+
+
+####Implementing####
+
+#Writing the Kernel (standard Gaussian Kernel)
+Gaus<-function(x){
+  
+  g<-(1/(2*pi)^(1/2))*exp((-1/2)*x^2)
+  return(g) 
+}
+
+#Writing the Nadaraya-Watson estimator mx:
+
+mx<-function(t,x,h,y){
+  #Setting up the for loop for the numerator:
+  sumo<-0
+  #Setting up the for loop for the denominator:
+  sumu<-0
+  
+  for (i in 1:n){
+    #defining a local x=lcx
+    lcx=((t-x[i])/h)
+    
+    
+    sumo<-sumo+Gaus(lcx)*y[i]
+    sumu<-sumu+Gaus(lcx)
+    
+  }
+  
+  #Setting up the Nadaraya-Watson estimator:
+  NWEt<-(sumo)/(sumu)
+  return(NWEt)
+  
+}
+
+#Now going through all the x in the data set:
+mx(0,data,h1,y)
+mx(1,data,h1,y)
+
+Hokuspokus<-function(t,h,y){
+  
+  mxv<-c()
+  
+  for (i in 1:n){
+    
+    mxv[i]<-mx(t[i],t,h,y)  
+    
+  }
+  return(mxv)
+}
+
+#Just raw plotting to get a first look at the estimation:
+Hokuspokus(data,h1,y)
+
+plot(data,Hokuspokus(data,0.01,y))
+
+##Now going through Hokuspokus for three different bandwidths: 
+
+#Going wild with functions names
+Tadaa<-function(t,hv,y){
+  
+  presto<-matrix(NA,3,n)
+  
+  for (i in 1:length(hv)){
+    
+    
+    presto[i,]<-Hokuspokus(t,hv[i],y)
+    
+  }
+  
+  return(presto)
+  
+}
+
+
+Tadaa(data,hv,y)
+
+
+####Now plotting the NW estimator with the three different bandwidths####
+
+#Generating and plotting the data sets with different bandwidths:
+NO1<-Hokuspokus(data,h1,y)#h1=0.01
+NO2<-Hokuspokus(data,h2,y)#h2=0.1
+NO3<-Hokuspokus(data,h3,y)#h3=0.5
+
+Farbe<-c("green","blue","red","purple")
+
+plot(data,y,pch=18,col="green",
+     main= "Nadaraya Watson Estimator with three different bandwidths",
+     ylab="m(x)",
+     xlab="x",
+)
+points(data,NO1,col="blue",pch=24)
+points(data,NO2,col="red",pch=22)
+points(data,NO3,col="purple",pch=23)
+legend(x="topleft",legend=c("dataset","h=0.01","h=0.1","h=0.5"),pch=c(18,24,22,23),col=Farbe)
+
+
+
+####Interpretation####
+
+#Bandwidth h works as a "smoothing parameter" as brings the estimator closer to the true DGP 
+#The effect of X on y can be seen as a positive effect 
+#As x increases y does as well
+
+
+
+
+
+
+
+
+
+
+####Causal effect####
+library("MASS")
+####DGP 2####
+
+b=1
+
+n=200
+
+#Covariance matrix:
+v<-c(1,0.7,0.7,1)
+sigma<-matrix(v,nrow=2,ncol=2)
+
+#creating mean vector:
+
+mc<-c(0,0)
+
+#Creating the data set:
+
+Xe<-matrix(NA,n,2)
+Xe
+
+
+Xe[,1:2]<-mvrnorm(n,mc,sigma)
+Xe
+
+cor(Xe[,1], Xe[,2])
+xi<-Xe[,1]
+xi
+
+
+Epsilon<-Xe[,2]
+Epsilon
+
+#Assuming again that a=1
+a=1
+
+#Assuming again that y=a+beta*x[i]+e[i]
+ynew=a+b*xi+Epsilon
+
+
+####Estimating the effect of xi on yi with three different bandwidths using the estimator from before####
+
+NO4<-Hokuspokus(xi,h1,ynew)
+plot(xi,NO4)
+NO5<-Hokuspokus(xi,h2,ynew)
+plot(xi,NO5)
+NO6<-Hokuspokus(xi,h3,ynew)
+plot(xi,NO6)
+
+
+plot(xi,ynew,pch=18,col="green",
+     main= "Nadaraya Watson Estimator with three different bandwidths",
+     ylab="m(x)",
+     xlab="x",
+)
+points(xi,NO4,col="blue",pch=24)
+points(xi,NO5,col="red",pch=22)
+points(xi,NO6,col="purple",pch=23)
+legend(x="topleft",legend=c("dataset","h=0.01","h=0.1","h=0.5"),pch=c(18,24,22,23),col=Farbe)
+
+
+####Using set seed(1) and going through the process again####
+
+set.seed(1)
+
+####For DGP 1####
+
+beta=1.5
+
+a=1
+
+n=200
+
+#Generating x[i]:
+data=c(rnorm(n,0,1))
+
+#Generating epsilon[i]
+eps=c(rnorm(n,0,1))
+
+
+y=a+beta*data+eps
+
+#Again setting up three different bandwidths:
+
+NO1<-Hokuspokus(data,h1,y)#h1=0.01
+NO2<-Hokuspokus(data,h2,y)#h2=0.1
+NO3<-Hokuspokus(data,h3,y)#h3=0.5
+
+#Plotting it 
+
+plot(data,y,pch=18,col="green",
+     main= "Nadaraya Watson Estimator with three different bandwidths",
+     ylab="m(x)",
+     xlab="x",
+)
+points(data,NO1,col="blue",pch=24)
+points(data,NO2,col="red",pch=22)
+points(data,NO3,col="purple",pch=23)
+legend(x="topleft",legend=c("dataset","h=0.01","h=0.1","h=0.5"),pch=c(18,24,22,23),col=Farbe)
+
+
+####DGP2####
+
+b=1
+
+n=200
+
+#Covariance matrix:
+v<-c(1,0.7,0.7,1)
+sigma<-matrix(v,nrow=2,ncol=2)
+
+#Creating mean vector: 
+mc<-c(0,0)
+
+#Generating the data set:
+
+Xe<-matrix(NA,n,2)
+Xe
+
+Xe[,1:2]<-mvrnorm(n,mc,sigma)
+Xe
+
+
+xi<-Xe[,1]
+xi
+
+
+Epsilon<-Xe[,2]
+Epsilon
+
+
+
+##ynew
+
+ynew=a+b*xi+Epsilon 
+
+#Estimating for three different bandwidths:
+
+NO4<-Hokuspokus(xi,h1,ynew)
+plot(xi,NO4)
+NO5<-Hokuspokus(xi,h2,ynew)
+plot(xi,NO5)
+NO6<-Hokuspokus(xi,h3,ynew)
+plot(xi,NO6)
+
+
+#Plotting it again 
+
+plot(xi,ynew,pch=18,col="green",
+     main= "Nadaraya Watson Estimator with three different bandwidths",
+     ylab="m(x)",
+     xlab="x",
+)
+points(xi,NO5,col="blue",pch=24)
+points(xi,NO6,col="red",pch=22)
+points(xi,ynew,col="purple",pch=23)
+legend(x="topleft",legend=c("dataset","h=0.01","h=0.1","h=0.5"),pch=c(18,24,22,23),col=Farbe)
+
+
+
+
+
+
+
+
+
+
+
+
