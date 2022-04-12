@@ -1,0 +1,67 @@
+---
+title: "Project Template, Comp. Statistik"
+header-includes:
+   - \usepackage{amsmath}
+   - \usepackage{setspace}
+output: pdf_document
+---
+
+\onehalfspacing
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Topics
+
+In general: select a method we discussed in class, implement it and perform a simulation study that illuminates aspects beyond those that we discussed in class. For example: 
+
+\begin{itemize}
+\item OLS: implementing methods of causal inference using linear models, such as individual fixed effects regression, differences-in-differences, instrumental variables. 
+\item nonparametric regression:
+\begin{itemize}
+\item implement the estimator to more dimensions than one and discuss the implications in terms of bandwidth(s), interpretability
+\item nonparametric instrumental variables: implementation and discussion
+\end{itemize}
+\item regularization: extend to different penalties beyond lasso and ridge, i.e. elastic net, group structures. How do the data requirements/assumptions change? Compare the performance of different estimators in relevant dimensions. 
+\item maximum likelihood: implement linear regression as a likelihood estimator, compare assumptions across estimation methods (OLS vs. ML) and compare the performance. 
+\end{itemize}
+
+These are just examples. You can pick a topic based on your problem set presentation or in another area. 
+
+
+You can directly include code snippets in a greyed-out window:
+
+```{r example 1}
+##Here is an example##
+a=1
+b=2
+c=a*b
+
+```
+
+## Structure
+
+You should introduce the method mathematically and verbally. Describe the necessary assumptions, describe the type of data generating process that is well suited for analysis with this method. Under what conditions that this method perform well? Under what conditions does this method perform worse, possibly in comparison with another method? 
+
+```{r example 2}
+##Introduce the data generating process used in your simulations here#
+
+## Use plots, tables, to demonstrate that your data generating process #
+#fulfills the assumptions laid out above/is generally suited 
+#to the method you want to investigate. For example: is your 
+#method robust to correlated covariates? Does your method require
+#continuous or binary covariates? ... 
+```
+
+
+Describe your simulation study. What finite sample properties do you want to investigate and why? Which part of the dgp will you vary and describe your reasoning for varying this part. 
+
+
+```{r example 3}
+### Replicate the simulation set-up in code that you describe above.
+#Comment as much as necessary to read the code. 
+### Use suitable visualizations and tables as outputs. 
+```
+
+
+Verbally describe your results and integrate the plots, tables etc. from your simulations. Interpret your results and give a short outlook: what other properties could you investigate? What other inputs could you change in a simulation study? 
